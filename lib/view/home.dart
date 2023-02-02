@@ -136,7 +136,7 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           StatusPage(),
           SettingsPage(),
-          ControlPage(),
+          ControlPage(Icon(Icons.cached), 'Cha'),
         ],
       );
   }
