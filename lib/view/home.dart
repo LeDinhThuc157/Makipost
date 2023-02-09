@@ -9,8 +9,10 @@ import 'StatusPage.dart';
 
 
 class Home extends StatefulWidget {
-  const Home({ Key? key }) : super(key: key);
-
+  const Home(
+      this._token,
+      );
+  final String _token;
   @override
   _HomeState createState() => _HomeState();
 }
@@ -18,26 +20,26 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int activeTab = 0;
 
-
   @override
   Widget build(BuildContext context) {
-
+    // print("Home Token: $_token");
+    // print("Token user login: ${widget._token.toString()}");
     return Container(
-
       decoration: BoxDecoration(
         color: appBgColor.withOpacity(.95),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40)
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40)
         ),
-        ),
+      ),
 
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        bottomNavigationBar: getBottomBar(),
-        floatingActionButton: getHomeButton(),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
-        body: getBarPage()
+          backgroundColor: Colors.transparent,
+          bottomNavigationBar: getBottomBar(),
+          // Nếu có floatingActionButton thì không các button sẽ bị vo hiệu hóa không hoạt động.
+          // floatingActionButton: getHomeButton(),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+          body: getBarPage()
       ),
     );
   }
@@ -51,10 +53,10 @@ class _HomeState extends State<Home> {
       // padding: EdgeInsets.all(30*heightR),
       child: GestureDetector(
         onTap: () {
-          activeTab = 0;
-          // setState(() {
-          //  activeTab = 0;
-          // });
+          // activeTab = 0;
+          setState(() {
+           activeTab = 0;
+          });
         },
       ),
     );
@@ -69,62 +71,62 @@ class _HomeState extends State<Home> {
       height: 100*heightR,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: mainColor,
-        // borderRadius: BorderRadius.only(
-        //   topLeft: Radius.circular(25),
-        //   topRight: Radius.circular(25)
-        // ),
-        boxShadow: [
-          BoxShadow(
-            color: mainColor.withOpacity(0.1),
-            blurRadius: .5,
-            spreadRadius: .5,
-            offset: Offset(0, 1)
-          )
-        ]
+          color: mainColor,
+          // borderRadius: BorderRadius.only(
+          //   topLeft: Radius.circular(25),
+          //   topRight: Radius.circular(25)
+          // ),
+          boxShadow: [
+            BoxShadow(
+                color: mainColor.withOpacity(0.1),
+                blurRadius: .5,
+                spreadRadius: .5,
+                offset: Offset(0, 1)
+            )
+          ]
       ),
       child: Padding(
-        padding:  EdgeInsets.only(top:15*heightR,left: 125*widthR, right: 125*widthR),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              BottomBarItem(
-                Icons.desktop_mac_outlined,
-                "STATUS",
-                isActive: activeTab == 0,
-                activeColor: secondary,
-                onTap: () {
-                  setState(() {
-                    activeTab = 0;
-                  });
-                },
-              ),
-              BottomBarItem(
-                Icons.settings,
-                "SETTINGS",
-                isActive: activeTab == 1,
-                activeColor: secondary,
-                onTap: () {
-                  setState(() {
-                    activeTab = 1;
-                  });
-                },
-              ),
-              BottomBarItem(
-                Icons.swap_horiz,
-                "CONTROL",
-                isActive: activeTab == 2,
-                activeColor: secondary,
-                onTap: () {
-                  setState(() {
-                    activeTab = 2;
-                  });
-                },
-              ),
-            ]
+          padding:  EdgeInsets.only(top:15*heightR,left: 125*widthR, right: 125*widthR),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                BottomBarItem(
+                  Icons.desktop_mac_outlined,
+                  "STATUS",
+                  isActive: activeTab == 0,
+                  activeColor: secondary,
+                  onTap: () {
+                    setState(() {
+                      activeTab = 0;
+                    });
+                  },
+                ),
+                BottomBarItem(
+                  Icons.settings,
+                  "SETTINGS",
+                  isActive: activeTab == 1,
+                  activeColor: secondary,
+                  onTap: () {
+                    setState(() {
+                      activeTab = 1;
+                    });
+                  },
+                ),
+                BottomBarItem(
+                  Icons.swap_horiz,
+                  "CONTROL",
+                  isActive: activeTab == 2,
+                  activeColor: secondary,
+                  onTap: () {
+                    setState(() {
+                      activeTab = 2;
+                    });
+                  },
+                ),
+              ]
           )
-        ),
+      ),
     );
   }
 
@@ -134,8 +136,8 @@ class _HomeState extends State<Home> {
       IndexedStack(
         index: activeTab,
         children: <Widget>[
-          StatusPage(),
-          SettingsPage(),
+          StatusPage(widget._token.toString()),
+          SettingsPage(widget._token.toString()),
           ControlPage(Icon(Icons.cached), 'Cha'),
         ],
       );
