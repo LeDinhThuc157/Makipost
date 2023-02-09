@@ -5,18 +5,17 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:makipos/view/SettingsPage.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 
 import '../main.dart';
-import 'SettingsPage.dart';
 import 'StatusPage.dart';
 import 'home.dart';
 
-void main() async {
-}
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
+
   @override
   _LogInPageState createState() => _LogInPageState();
 }
@@ -33,7 +32,7 @@ class _LogInPageState extends State<LogInPage> {
       navigateRoute: SignPage(),
       duration: 5000,
       imageSize: 300,
-      imageSrc: "assets/splashscreen_image.png",
+      imageSrc: "assets/logo_appthuepin.png",
       text: "BK Lab Manager",
       textType: TextType.ColorizeAnimationText,
       textStyle: TextStyle(
@@ -72,7 +71,8 @@ class _SignPageState extends State<SignPage> {
   var token = "";
   var _userNameError = "Tài khoản không hợp lệ";
   var _passwordError = "Mật khẩu phải trên 6 kí tự ";
-
+  var _userInvalid = false;
+  var _passIvalid = false;
 
 
   Widget _entryField(
@@ -118,9 +118,18 @@ class _SignPageState extends State<SignPage> {
                           fontSize: 200 * curR),
                     )),
                 Container(
+                  // color: Colors.red,
+                  height: 450*heightR,
+                  padding:  EdgeInsets.all(40*heightR),
+                  margin: EdgeInsets.only(bottom: 30*heightR),
+                  alignment: Alignment.center,
+                  child: Image.asset('assets/logo_appthuepin.png'),
+                ),
+                Container(
                     padding:  EdgeInsets.fromLTRB(60*widthR, 0, 60*widthR, 10*heightR),
                   child: _entryField(false,'User Name', nameController)
                 ),
+
                 Container(
                   padding:  EdgeInsets.fromLTRB(60*widthR, 10*heightR, 60*widthR, 0),
                   child: Stack(
@@ -226,9 +235,9 @@ class _SignPageState extends State<SignPage> {
                           style: TextStyle(fontSize: 110*curR),
                         ),
                         onPressed: () {
-                          // Navigator.push(context, MaterialPageRoute(
-                          //   builder: (context) => StatusPage(),
-                          // ));
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => Home(token),
+                          ));
                         },
                       )
                     ),
@@ -239,7 +248,7 @@ class _SignPageState extends State<SignPage> {
     );
   }
 
-  Future<String> _onLoginClick() async {
+  _onLoginClick() async {
     try{
       var response_user_login = await http.post(
           Uri.parse(
@@ -250,15 +259,16 @@ class _SignPageState extends State<SignPage> {
           body: jsonEncode({
             "authCode": false,
             "strategy": "local",
-            "username": "BMS_admin",
-            "password": "01012023"
+            "username": "${nameController.text}",
+            "password": "${passwordController.text}"
           })
       );
       _statusCode = response_user_login.statusCode;
       Map<String, dynamic> userMap = jsonDecode(response_user_login.body);
       token = userMap["accessToken"].toString();
+      print("LoginUsers:${response_user_login.body}");
     } catch (e) {
-      print(e);
+      print(e.toString());
     }
     return token;
   }
