@@ -138,7 +138,7 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           StatusPage(widget._token.toString()),
           SettingsPage(widget._token.toString()),
-          ControlPage(Icon(Icons.cached), 'Cha'),
+          ControlPage(Icon(Icons.cached), 'Cha',widget._token.toString(),"za"),
         ],
       );
   }

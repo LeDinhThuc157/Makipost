@@ -40,6 +40,26 @@ class _StatusPageState extends State<StatusPage> {
   var cell_11_vol;
   var cell_12_vol;
   var cell_13_vol;
+
+  var charge;
+  bool charbool = true;
+  var discharge;
+  bool dischabool = true;
+
+  Boolvalue(){
+    if(charge == "1"){
+      charbool = true;
+    }
+    if(charge == "0"){
+      charbool = false;
+    }
+    if(discharge == "1"){
+      dischabool = true;
+    }
+    if(discharge == "0"){
+      dischabool = false;
+    }
+  }
   var bat_vol;
   var bat_cap;
   var bat_capacity;
@@ -49,7 +69,8 @@ class _StatusPageState extends State<StatusPage> {
   var box_temp;
   var system_working_time;
   var bat_current;
-  String id = "635a3bee7f5e970007ecbe57";
+  var mos_temp;
+  String id = "63be79a13ea8bc0007797118";
   postData() async {
     try {
       //4.Thông tin thiết bị.
@@ -63,29 +84,35 @@ class _StatusPageState extends State<StatusPage> {
       print("StatusListDevice: ${responseGet_Listdevice.statusCode}");
       Map<String, dynamic> userMap = jsonDecode(responseGet_Listdevice.body);
       print("Time: ${userMap["propertiesValue"]["uptime"]}");
-      cell_1_vol = userMap["propertiesValue"]["cell_1_vol"].toString();
-      cell_2_vol = userMap["propertiesValue"]["cell_2_vol"].toString();
-      cell_3_vol = userMap["propertiesValue"]["cell_3_vol"].toString();
-      cell_4_vol = userMap["propertiesValue"]["cell_4_vol"].toString();
-      cell_5_vol = userMap["propertiesValue"]["cell_5_vol"].toString();
-      cell_6_vol = userMap["propertiesValue"]["cell_6_vol"].toString();
-      cell_7_vol = userMap["propertiesValue"]["cell_7_vol"].toString();
-      cell_8_vol = userMap["propertiesValue"]["cell_8_vol"].toString();
-      cell_9_vol = userMap["propertiesValue"]["cell_9_vol"].toString();
-      cell_10_vol = userMap["propertiesValue"]["cell_10_vol"].toString();
-      cell_11_vol = userMap["propertiesValue"]["cell_11_vol"].toString();
-      cell_12_vol = userMap["propertiesValue"]["cell_12_vol"].toString();
-      cell_13_vol = userMap["propertiesValue"]["cell_13_vol"].toString();
 
-      bat_vol = userMap["propertiesValue"]["bat_vol"].toString();
-      bat_cap = userMap["propertiesValue"]["bat_cap"].toString();
-      bat_capacity = userMap["propertiesValue"]["bat_capacity"].toString();
-      bat_temp = userMap["propertiesValue"]["bat_temp"].toString();
-      bat_percent = userMap["propertiesValue"]["bat_percent"].toString();
-      bat_cycles = userMap["propertiesValue"]["bat_cycles"].toString();
-      box_temp = userMap["propertiesValue"]["box_temp"].toString();
-      system_working_time = userMap["propertiesValue"]["system_working_time"].toString();
-      bat_current = userMap["propertiesValue"]["bat_current"].toString();
+      setState(() {
+        cell_1_vol = userMap["propertiesValue"]["cell_1_vol"].toString();
+        cell_2_vol = userMap["propertiesValue"]["cell_2_vol"].toString();
+        cell_3_vol = userMap["propertiesValue"]["cell_3_vol"].toString();
+        cell_4_vol = userMap["propertiesValue"]["cell_4_vol"].toString();
+        cell_5_vol = userMap["propertiesValue"]["cell_5_vol"].toString();
+        cell_6_vol = userMap["propertiesValue"]["cell_6_vol"].toString();
+        cell_7_vol = userMap["propertiesValue"]["cell_7_vol"].toString();
+        cell_8_vol = userMap["propertiesValue"]["cell_8_vol"].toString();
+        cell_9_vol = userMap["propertiesValue"]["cell_9_vol"].toString();
+        cell_10_vol = userMap["propertiesValue"]["cell_10_vol"].toString();
+        cell_11_vol = userMap["propertiesValue"]["cell_11_vol"].toString();
+        cell_12_vol = userMap["propertiesValue"]["cell_12_vol"].toString();
+        cell_13_vol = userMap["propertiesValue"]["cell_13_vol"].toString();
+
+        bat_vol = userMap["propertiesValue"]["bat_vol"].toString();
+        bat_cap = userMap["propertiesValue"]["bat_cap"].toString();
+        bat_capacity = userMap["propertiesValue"]["bat_capacity"].toString();
+        bat_temp = userMap["propertiesValue"]["bat_temp"].toString();
+        bat_percent = userMap["propertiesValue"]["bat_percent"].toString();
+        bat_cycles = userMap["propertiesValue"]["bat_cycles"].toString();
+        box_temp = userMap["propertiesValue"]["box_temp"].toString();
+        system_working_time = userMap["propertiesValue"]["system_working_time"].toString();
+        bat_current = userMap["propertiesValue"]["bat_current"].toString();
+        charge = userMap["propertiesValue"]["charging_mos_switch"].toString();
+        discharge = userMap["propertiesValue"]["discharge_mos_switch"].toString();
+        mos_temp = userMap["propertiesValue"]["tube_temp"].toString();
+      });
     } catch (e) {
       print(e);
     }
@@ -154,6 +181,7 @@ class _StatusPageState extends State<StatusPage> {
     widthR = MediaQuery.of(context).size.width / 2400;
     var curR = widthR;
     postData();
+    Boolvalue();
     return Scaffold(
       appBar: CustomAppbar(),
       backgroundColor: Colors.black45,
@@ -172,8 +200,15 @@ class _StatusPageState extends State<StatusPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  child: Text(
-                    'Charge: ON',
+                  child: charbool! ?
+                  Text(
+              'Charge: ON',
+                style: TextStyle(
+                  color: secondary,
+                  fontSize: 24*heightR,
+                ),
+              ): Text(
+                    'Charge: OFF',
                     style: TextStyle(
                       color: secondary,
                       fontSize: 24*heightR,
@@ -196,8 +231,14 @@ class _StatusPageState extends State<StatusPage> {
                       ),
                     ),
                   ),
-                  child: Text(
+                  child: dischabool! ? Text(
                     'Discharge: ON',
+                    style: TextStyle(
+                      color: secondary,
+                      fontSize: 24*heightR,
+                    ),
+                  ):Text(
+                    'Discharge: OFF',
                     style: TextStyle(
                       color: secondary,
                       fontSize: 24*heightR,
@@ -247,7 +288,7 @@ class _StatusPageState extends State<StatusPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text_title(
-                                data:'Battery Power(Chưa có):'
+                                data:'MOS Temp:'
                             ),
                             Text_title(
                                 data:'Battery Capacity:'
@@ -259,19 +300,7 @@ class _StatusPageState extends State<StatusPage> {
                                 data:'Ave. Cell Volt(Chưa có):'
                             ),
                             Text_title(
-                                data:'Balance Curr(Chưa có):'
-                            ),
-                            Text_title(
                                 data:'Battery T2:'
-                            ),
-                            Text_title(
-                                data:'Heat Current(chưa có):'
-                            ),
-                            Text_title(
-                                data:'ACC Status(Chưa có):'
-                            ),
-                            Text_title(
-                                data:'Precharge Stat(Chưa có):'
                             ),
                           ],
                         ),
@@ -282,7 +311,7 @@ class _StatusPageState extends State<StatusPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text_Value(
-                                data: '0.0w',
+                                data: '$mos_temp°C',
                             ),
                             Text_Value(
                                 data:'$bat_cap AH'
@@ -294,19 +323,7 @@ class _StatusPageState extends State<StatusPage> {
                                 data:'3.384V'
                             ),
                             Text_Value(
-                                data:'0.000A'
-                            ),
-                            Text_Value(
                                 data:'$bat_temp °C'
-                            ),
-                            Text_Value(
-                                data:'0.000A'
-                            ),
-                            Text_Value(
-                                data:'ON'
-                            ),
-                            Text_Value(
-                                data:'OFF'
                             ),
                           ],
                         ),
@@ -328,9 +345,9 @@ class _StatusPageState extends State<StatusPage> {
                             Text_title(
                                 data:'Remain Battery:'
                             ),
-                            Text_title(
-                                data:'Remain Capacity(Khong co):'
-                            ),
+                            // Text_title(
+                            //     data:'Remain Capacity(Khong co):'
+                            // ),
                             Text_title(
                                 data:'Cycle Count:'
                             ),
@@ -340,15 +357,15 @@ class _StatusPageState extends State<StatusPage> {
                             Text_title(
                                 data:'Battery T1:'
                             ),
-                            Text_title(
-                                data:'Battery T3(Khoong co):'
-                            ),
-                            Text_title(
-                                data:'Heating Status(Khong co):'
-                            ),
-                            Text_title(
-                                data:'Charg.Plugged(Khong co):'
-                            ),
+                            // Text_title(
+                            //     data:'Battery T3(Khoong co):'
+                            // ),
+                            // Text_title(
+                            //     data:'Heating Status(Khong co):'
+                            // ),
+                            // Text_title(
+                            //     data:'Charg.Plugged(Khong co):'
+                            // ),
                             Text_title(
                                 data:'Time Emerg:'
                             ),
@@ -363,9 +380,9 @@ class _StatusPageState extends State<StatusPage> {
                             Text_Value(
                               data: '$bat_percent%',
                             ),
-                            Text_Value(
-                                data:'396.0AH'
-                            ),
+                            // Text_Value(
+                            //     data:'396.0AH'
+                            // ),
                             Text_Value(
                                 data:'$bat_cycles'
                             ),
@@ -375,15 +392,15 @@ class _StatusPageState extends State<StatusPage> {
                             Text_Value(
                                 data:'$box_temp°C'
                             ),
-                            Text_Value(
-                                data:'23.5°C'
-                            ),
-                            Text_Value(
-                                data:'OFF'
-                            ),
-                            Text_Value(
-                                data:'Plugged'
-                            ),
+                            // Text_Value(
+                            //     data:'23.5°C'
+                            // ),
+                            // Text_Value(
+                            //     data:'OFF'
+                            // ),
+                            // Text_Value(
+                            //     data:'Plugged'
+                            // ),
                             Text_Value(
                                 data:'$system_working_time'
                             ),

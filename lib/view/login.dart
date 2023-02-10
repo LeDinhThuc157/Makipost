@@ -5,17 +5,19 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makipos/view/SettingsPage.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 
 import '../main.dart';
+import 'SettingsPage.dart';
 import 'StatusPage.dart';
+import 'empty_page.dart';
 import 'home.dart';
 
+void main() async {
+}
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
-
   @override
   _LogInPageState createState() => _LogInPageState();
 }
@@ -71,8 +73,7 @@ class _SignPageState extends State<SignPage> {
   var token = "";
   var _userNameError = "Tài khoản không hợp lệ";
   var _passwordError = "Mật khẩu phải trên 6 kí tự ";
-  var _userInvalid = false;
-  var _passIvalid = false;
+
 
 
   Widget _entryField(
@@ -127,30 +128,18 @@ class _SignPageState extends State<SignPage> {
                 ),
                 Container(
                     padding:  EdgeInsets.fromLTRB(60*widthR, 0, 60*widthR, 10*heightR),
-                  child: _entryField(false,'User Name', nameController)
+                    child: _entryField(false,'User Name', nameController)
                 ),
-
                 Container(
                   padding:  EdgeInsets.fromLTRB(60*widthR, 10*heightR, 60*widthR, 0),
                   child: Stack(
                     alignment: AlignmentDirectional.centerEnd,
                     children: <Widget>[
                       _entryField(
-                          !showPass,
-                          'Password',
-                          passwordController,
+                        !showPass,
+                        'Password',
+                        passwordController,
                       ),
-                      // GestureDetector(
-                      //   onTap: onShowPass,
-                      //   child: Text(
-                      //     showPass ? "Hide" : "Show",
-                      //     style: TextStyle(
-                      //       color: Colors.blue,
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.bold,
-                      //     ),
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
@@ -163,7 +152,7 @@ class _SignPageState extends State<SignPage> {
                     child:  Text(
                       'Forgot Password?',
                       style: TextStyle(
-                          fontSize: 100*curR,
+                        fontSize: 100*curR,
                       ),
                     ),
                   ),
@@ -192,7 +181,7 @@ class _SignPageState extends State<SignPage> {
                         print("Trạng thái Code: $_statusCode");
                         if(_statusCode == 201){
                           Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => Home(token),
+                            builder: (context) => EmptyPage(),
                           )
                           );
                         }
@@ -220,26 +209,26 @@ class _SignPageState extends State<SignPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                     Container(
-                       margin: EdgeInsets.only(left: 200*widthR),
-                       child: Text('Do not have an account?',
-                         style: TextStyle(
-                           fontSize: 105*curR,
-                         ),),
-                     ),
+                    Container(
+                      margin: EdgeInsets.only(left: 200*widthR),
+                      child: Text('Do not have an account?',
+                        style: TextStyle(
+                          fontSize: 105*curR,
+                        ),),
+                    ),
                     Container(
                         margin: EdgeInsets.only(right: 170*widthR),
                         child: TextButton(
-                        child:  Text(
-                          'Sign up',
-                          style: TextStyle(fontSize: 110*curR),
-                        ),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => Home(token),
-                          ));
-                        },
-                      )
+                          child:  Text(
+                            'Sign up',
+                            style: TextStyle(fontSize: 110*curR),
+                          ),
+                          onPressed: () {
+                            // Navigator.push(context, MaterialPageRoute(
+                            //   builder: (context) => StatusPage(),
+                            // ));
+                          },
+                        )
                     ),
                   ],
                 ),
@@ -266,9 +255,8 @@ class _SignPageState extends State<SignPage> {
       _statusCode = response_user_login.statusCode;
       Map<String, dynamic> userMap = jsonDecode(response_user_login.body);
       token = userMap["accessToken"].toString();
-      print("LoginUsers:${response_user_login.body}");
     } catch (e) {
-      print(e.toString());
+      print(e);
     }
     return token;
   }
