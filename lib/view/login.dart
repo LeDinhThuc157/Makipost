@@ -179,29 +179,7 @@ class _SignPageState extends State<SignPage> {
                           _onLoginClick();
                         });
                         print("Trạng thái Code: $_statusCode");
-                        if(_statusCode == 201){
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => EmptyPage(),
-                          )
-                          );
-                        }
-                        else{
-                          AwesomeDialog(
-                            context: context,
-                            animType: AnimType.leftSlide,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.error,
-                            showCloseIcon: true,
-                            title: 'Đang nhập thất bại',
-                            desc:
-                            'Kiểm tra lại thông tin đăng nhập của bạn!',
-                            btnOkOnPress: () {
-                            },
-                            btnOkIcon: Icons.check_circle,
-                            onDismissCallback: (type) {
-                            },
-                          ).show();
-                        }
+
                         print(nameController.text);
                         print(passwordController.text);
                       },
@@ -253,6 +231,30 @@ class _SignPageState extends State<SignPage> {
           })
       );
       _statusCode = response_user_login.statusCode;
+      if(_statusCode == 201){
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) => Home(token),
+        )
+        );
+      }
+      else{
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.leftSlide,
+          headerAnimationLoop: false,
+          dialogType: DialogType.error,
+          showCloseIcon: true,
+          title: 'Đang nhập thất bại',
+          desc:
+          'Kiểm tra lại thông tin đăng nhập của bạn!',
+          btnOkOnPress: () {
+          },
+          btnOkIcon: Icons.check_circle,
+          onDismissCallback: (type) {
+          },
+        ).show();
+      }
+      print(_statusCode);
       Map<String, dynamic> userMap = jsonDecode(response_user_login.body);
       token = userMap["accessToken"].toString();
     } catch (e) {
